@@ -1,5 +1,12 @@
 {-# LANGUAGE LambdaCase, DeriveDataTypeable #-}
-module Data.Rule.Forest where
+module Data.Rule.Forest
+  ( Node
+  , node
+  , find
+  , union
+  , value
+  , same
+  ) where
 
 import Control.Applicative
 import Control.Monad (when)
@@ -9,12 +16,17 @@ import Data.STRef
 import Data.Typeable
 
 data Link s a
-  = Self  { linkRank :: {-# UNPACK #-} !Int, _linkValue :: a }
-  | Other { linkRank :: {-# UNPACK #-} !Int, _linkNode :: {-# UNPACK #-} !(Node s a) }
+  = Self  {-# UNPACK #-} !Int a
+  | Other {-# UNPACK #-} !Int {-# UNPACK #-} !(Node s a)
   deriving Typeable
 
 newtype Node s a = Node { nodeLink :: STRef s (Link s a) }
   deriving Typeable
+
+value :: Node s a -> ST s a
+value n = do
+  (_,_,a) <- find' n
+  return a
 
 instance Eq (Node s a) where
   (==) = (==) `on` nodeLink

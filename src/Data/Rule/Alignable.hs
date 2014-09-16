@@ -1,5 +1,8 @@
 {-# LANGUAGE DefaultSignatures, FlexibleContexts, TypeOperators #-}
-module Data.Rule.Alignable where
+module Data.Rule.Alignable
+  ( Alignable(..)
+  , GAlignable
+  ) where
 
 import Control.Applicative
 import Control.Applicative.Backwards
